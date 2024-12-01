@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Puzzle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #ddd;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        #message {
+            display: none;
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <div class="puzzle-container" id="puzzleContainer">
+        <!-- Puzzle pieces will go here -->
+    </div>
+    <div id="message">Tebrikler! Puzzle'ı tamamladın!</div>
+</div>
+
+<script>
+    // Puzzle Pieces
+    const puzzleImages = [
+        'https://via.placeholder.com/100', // Image URL for puzzle pieces (replace with your actual image URLs)
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100',
+        'https://via.placeholder.com/100'
+    ];
+
+    // Shuffle puzzle pieces
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Initialize puzzle
+    function initPuzzle() {
+        shuffle(puzzleImages);
+        const container = document.getElementById('puzzleContainer');
+        container.innerHTML = '';
+        
+        puzzleImages.forEach((image, index) => {
+            const piece = document.createElement('div');
+            piece.classList.add('puzzle-piece');
+            piece.style.backgroundImage = `url(${image})`;
+            piece.setAttribute('data-index', index);
+            piece.onclick = () => movePiece(piece, index);
+            container.appendChild(piece);
+        });
+    }
+
+    // Handle puzzle piece clicks
+    function movePiece(piece, index) {
+        const correctOrder = puzzleImages.slice();
+        if (correctOrder[index] === piece.style.backgroundImage.slice(5, -2)) {
+            piece.classList.add('hidden');
+            checkPuzzle();
+        }
+    }
+
+    // Check if the puzzle is complete
+    function checkPuzzle() {
+        const hiddenPieces = document.querySelectorAll('.hidden');
+        if (hiddenPieces.length === puzzleImages.length) {
+            document.getElementById('message').style.display = 'block';
+        }
+    }
+
+    // Start puzzle
+    initPuzzle();
+</script>
+
+</body>
+</html>
